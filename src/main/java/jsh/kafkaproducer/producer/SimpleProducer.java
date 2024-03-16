@@ -26,7 +26,9 @@ public class SimpleProducer {
 
         //ProducerRecord<String, String> record = getBasicRecord(TOPIC_NAME, "testMessage");
 
-        ProducerRecord<String, String> record = getMsgKeyRecord(TOPIC_NAME, "myKey_message", "myKey");
+        //ProducerRecord<String, String> record = getMsgKeyRecord(TOPIC_NAME, "myKeyMsg", "myKey");
+
+        ProducerRecord<String, String> record = getPartitionNoSettedRecord(TOPIC_NAME, 0, "partitionMsg", "partition");
 
         producer.send(record);
         log.info("{}", record);
@@ -40,5 +42,9 @@ public class SimpleProducer {
 
     private static ProducerRecord<String, String> getMsgKeyRecord(String topicName, String messageValue, String key) {
         return new ProducerRecord<>(topicName, messageValue, key);
+    }
+
+    private static ProducerRecord<String, String> getPartitionNoSettedRecord(String topicName, int partitionNo, String messageValue, String key) {
+        return new ProducerRecord<>(topicName, partitionNo, messageValue, key);
     }
 }
