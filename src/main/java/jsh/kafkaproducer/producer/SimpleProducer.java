@@ -1,5 +1,6 @@
 package jsh.kafkaproducer.producer;
 
+import jsh.kafkaproducer.partitioner.CustomPartitioner;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -28,7 +29,10 @@ public class SimpleProducer {
 
         //ProducerRecord<String, String> record = getMsgKeyRecord(TOPIC_NAME, "myKeyMsg", "myKey");
 
-        ProducerRecord<String, String> record = getPartitionNoSettedRecord(TOPIC_NAME, 0, "partitionMsg", "partition");
+        //ProducerRecord<String, String> record = getPartitionNoSettedRecord(TOPIC_NAME, 0, "partitionMsg", "partition");
+
+        configs.put(ProducerConfig.PARTITIONER_CLASS_CONFIG, CustomPartitioner.class);
+        ProducerRecord<String, String> record = getMsgKeyRecord(TOPIC_NAME, "PangyoMsg", "Pangyo");
 
         producer.send(record);
         log.info("{}", record);
