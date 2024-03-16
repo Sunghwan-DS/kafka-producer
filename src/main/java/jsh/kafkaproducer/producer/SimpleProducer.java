@@ -23,8 +23,11 @@ public class SimpleProducer {
 
         KafkaProducer<String, String> producer = new KafkaProducer<>(configs);
 
-        String messageValue = "testMessage";
-        ProducerRecord<String, String> record = getBasicRecord(TOPIC_NAME, messageValue);
+
+        //ProducerRecord<String, String> record = getBasicRecord(TOPIC_NAME, "testMessage");
+
+        ProducerRecord<String, String> record = getMsgKeyRecord(TOPIC_NAME, "myKey_message", "myKey");
+
         producer.send(record);
         log.info("{}", record);
         producer.flush();
@@ -33,5 +36,9 @@ public class SimpleProducer {
 
     private static ProducerRecord<String, String> getBasicRecord(String topicName, String messageValue) {
         return new ProducerRecord<>(topicName, messageValue);
+    }
+
+    private static ProducerRecord<String, String> getMsgKeyRecord(String topicName, String messageValue, String key) {
+        return new ProducerRecord<>(topicName, messageValue, key);
     }
 }
