@@ -9,4 +9,4 @@
     * Package name: jsh.kafkaproducer
     * Packaging: Jar
     * Java: 17
-* Dependencies: Spring for Apache Kafka
+* Dependencies: Spring for Apache Kafka, Lombok
