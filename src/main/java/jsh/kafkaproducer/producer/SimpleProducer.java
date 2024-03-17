@@ -5,9 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.kafka.common.serialization.StringSerializer;
 
 import java.util.Properties;
+import java.util.concurrent.ExecutionException;
 
 @Slf4j
 public class SimpleProducer {
@@ -15,7 +17,7 @@ public class SimpleProducer {
     private static final String TOPIC_NAME = "test";
     private static final String BOOTSTRAP_SERVERS = "my-kafka:9092";
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ExecutionException, InterruptedException {
 
         Properties configs = new Properties();
         configs.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVERS);
@@ -33,11 +35,17 @@ public class SimpleProducer {
 
         configs.put(ProducerConfig.PARTITIONER_CLASS_CONFIG, CustomPartitioner.class);
         ProducerRecord<String, String> record = getMsgKeyRecord(TOPIC_NAME, "PangyoMsg", "Pangyo");
-
-        producer.send(record);
         log.info("{}", record);
-        producer.flush();
-        producer.close();
+
+        try {
+            RecordMetadata metadata = producer.send(record).get();
+            log.info(metadata.toString());
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        } finally {
+            producer.flush();
+            producer.close();
+        }
     }
 
     private static ProducerRecord<String, String> getBasicRecord(String topicName, String messageValue) {
